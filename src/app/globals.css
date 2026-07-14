@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-laken-500: #ec4899;
+    --color-warmth-400: #fbbf24;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-pink-50 via-white to-amber-50 min-h-screen text-gray-800 antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-2xl
+           bg-gradient-to-r from-laken-500 to-laken-600
+           text-white font-semibold shadow-lg shadow-laken-200
+           hover:from-laken-600 hover:to-laken-700
+           hover:shadow-xl hover:shadow-laken-300
+           active:scale-95 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-2xl
+           bg-white border-2 border-laken-200
+           text-laken-600 font-semibold
+           hover:bg-laken-50 hover:border-laken-300
+           active:scale-95 transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg
+           border border-pink-100 p-6
+           hover:shadow-xl transition-shadow duration-300;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100
+           bg-white focus:border-laken-400 focus:ring-4
+           focus:ring-laken-100 outline-none transition-all
+           placeholder:text-gray-300;
+  }
+}
+
+/* ─── Animations ─────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #fce7f3 25%, #fdf2f8 50%, #fce7f3 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ─── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-pink-50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-laken-200 rounded-full hover:bg-laken-300;
+}
