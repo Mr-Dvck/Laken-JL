@@ -16,17 +16,16 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-pink-100 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-pink-100/60 shadow-sm">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-xl font-display font-bold
-                       text-laken-600 hover:text-laken-700 transition-colors"
+            className="flex items-center gap-3 text-2xl font-display font-bold text-laken-600 hover:scale-105 transition-transform"
           >
-            <span className="text-2xl">💕</span>
-            <span className="hidden sm:inline">Laken&apos;s Journey</span>
+            <span className="text-3xl drop-shadow-sm">💕</span>
+            <span>Laken&apos;s Journey</span>
           </Link>
 
           {/* Nav Links */}

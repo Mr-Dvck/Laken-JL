@@ -14,37 +14,45 @@
 }
 
 @layer components {
+  .card {
+    @apply bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-pink-100/70 p-8
+           hover:shadow-2xl hover:-translate-y-1 transition-all duration-300;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-2xl
-           bg-gradient-to-r from-laken-500 to-laken-600
-           text-white font-semibold shadow-lg shadow-laken-200
-           hover:from-laken-600 hover:to-laken-700
-           hover:shadow-xl hover:shadow-laken-300
-           active:scale-95 transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-lg
+           bg-gradient-to-r from-laken-500 via-purple-500 to-laken-600 text-white
+           shadow-xl shadow-laken-300/50 hover:shadow-2xl hover:brightness-110
+           active:scale-[0.97] transition-all duration-200;
   }
 
   .btn-secondary {
     @apply inline-flex items-center gap-2 px-6 py-3 rounded-2xl
-           bg-white border-2 border-laken-200
-           text-laken-600 font-semibold
-           hover:bg-laken-50 hover:border-laken-300
-           active:scale-95 transition-all duration-200;
-  }
-
-  .card {
-    @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg
-           border border-pink-100 p-6
-           hover:shadow-xl transition-shadow duration-300;
+           bg-white border-2 border-laken-200 text-laken-600 font-semibold
+           hover:bg-laken-50 hover:border-laken-300 active:scale-95 transition-all duration-200;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100
-           bg-white focus:border-laken-400 focus:ring-4
-           focus:ring-laken-100 outline-none transition-all
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 bg-white 
+           focus:border-laken-400 focus:ring-4 focus:ring-laken-100 outline-none transition-all
            placeholder:text-gray-300;
   }
+
+  .heart-float {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: floatHeart 4s ease-in-out infinite;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+Heart {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { transform: translateY(-80px) rotate(20deg); opacity: 0; }
 }
 
+@keyframes float
 /* ─── Animations ─────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
