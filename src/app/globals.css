@@ -33,7 +33,7 @@
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 bg-white 
+    @apply w-full px-4 py-3 rounded-xl border-2 border-pink-100 bg-white
            focus:border-laken-400 focus:ring-4 focus:ring-laken-100 outline-none transition-all
            placeholder:text-gray-300;
   }
@@ -46,14 +46,14 @@
     pointer-events: none;
   }
 }
-Heart {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
-  50% { opacity: 0.9; }
+
+/* ─── Animations ─────────────────────────────── */
+@keyframes floatHeart {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+  50%  { opacity: 0.9; }
   100% { transform: translateY(-80px) rotate(20deg); opacity: 0; }
 }
 
-@keyframes float
-/* ─── Animations ─────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
