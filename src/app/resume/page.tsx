@@ -41,6 +41,9 @@ export default function ResumePage() {
   const [generating, setGenerating] = useState(false);
   const [blowupJobTitle, setBlowupJobTitle] = useState("");
   const [blowupSkills, setBlowupSkills] = useState("");
+  const [experienceInput, setExperienceInput] = useState("");
+  const [generatedBullets, setGeneratedBullets] = useState<string[]>([]);
+  const [expLoading, setExpLoading] = useState(false);
 
   function updateSection(id: string, content: string) {
     setSections((prev) =>
@@ -111,6 +114,37 @@ export default function ResumePage() {
     } finally {
       setGenerating(false);
     }
+  }
+
+  async function generateExperience() {
+    if (!experienceInput.trim()) return;
+    setExpLoading(true);
+    try {
+      const res = await fetch("/api/resume/generate-experience", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          input: experienceInput,
+          location: "Columbia, SC",
+          targetRole: blowupJobTitle || "data entry or administrative assistant",
+        }),
+      });
+      const data = await res.json();
+      if (data.bullets) {
+        setGeneratedBullets(data.bullets);
+      }
+    } catch (err) {
+      console.error("Failed to generate experience:", err);
+    } finally {
+      setExpLoading(false);
+    }
+  }
+
+  function copyBulletsToClipboard() {
+    const text = generatedBullets.map((b) => `• ${b}`).join("\n");
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   function addSection() {
@@ -239,6 +273,76 @@ export default function ResumePage() {
               </button>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* ✨ Previous Experience Generator — Columbia, SC */}
+      <div className="card mb-8 border-amber-200 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-yellow-400/5 to-amber-400/5 pointer-events-none" />
+        <div className="relative">
+          <h3 className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            ✨ Previous Experience Generator
+            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 font-medium">🌴 Columbia, SC</span>
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Tell me a bit about your past work and I&apos;ll generate strong, realistic bullets for you.
+          </p>
+
+          <textarea
+            value={experienceInput}
+            onChange={(e) => setExperienceInput(e.target.value)}
+            placeholder="E.g. Worked at a doctor's office in Columbia, answered phones, filed paperwork, used Microsoft Office..."
+            className="input-field min-h-[120px] mb-4 border-amber-200 focus:border-amber-400 focus:ring-amber-100"
+          />
+
+          <button
+            onClick={generateExperience}
+            disabled={!experienceInput.trim() || expLoading}
+            className="btn-primary w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 shadow-amber-200/50"
+          >
+            <Wand2 size={20} className={expLoading ? "animate-spin" : ""} />
+            {expLoading ? "Generating..." : "Generate Columbia-Friendly Bullets"}
+          </button>
+
+          {generatedBullets.length > 0 && (
+            <div className="mt-6">
+              <h4 className="font-medium text-gray-700 mb-3 flex items-center gap-2">
+                <Sparkles size={16} className="text-amber-500" />
+                Generated Experience Bullets:
+              </h4>
+              <ul className="space-y-3">
+                {generatedBullets.map((bullet, i) => (
+                  <li key={i} className="bg-white/80 p-4 rounded-2xl border border-amber-100 text-sm leading-relaxed text-gray-700 hover:border-amber-300 transition-colors">
+                    • {bullet}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={copyBulletsToClipboard}
+                  className="btn-secondary text-sm"
+                >
+                  {copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy All Bullets</>}
+                </button>
+                <button
+                  onClick={() => {
+                    const expSection = sections.find(s => s.type === "experience");
+                    if (expSection) {
+                      const newContent = generatedBullets.map(b => `• ${b}`).join("\n");
+                      updateSection(expSection.id, expSection.content
+                        ? expSection.content + "\n" + newContent
+                        : newContent
+                      );
+                      setGeneratedBullets([]);
+                    }
+                  }}
+                  className="btn-secondary text-sm bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100"
+                >
+                  <Plus size={14} /> Add to Work Experience
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

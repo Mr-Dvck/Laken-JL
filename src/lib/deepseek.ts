@@ -210,6 +210,52 @@ export async function chatWithLaken(
   return chat(messages, 0.9);
 }
 
+// ─── Generate Experience Bullets (Columbia, SC specific) ──
+export async function generateExperienceBullets(
+  input: string,
+  location: string,
+  targetRole: string
+): Promise<string[]> {
+  const messages: DeepSeekMessage[] = [
+    { role: "system", content: SUPPORTIVE_PERSONA },
+    {
+      role: "user",
+      content: `Laken is building her resume for ${targetRole} jobs in ${location}. 
+
+She told me about her past work: "${input}"
+
+Please generate 4-5 STRONG, realistic resume bullet points based on what she described. 
+
+CRITICAL RULES:
+- Make them sound REAL and specific to ${location} — reference realistic local employers (doctor's offices, government offices, USC, Prisma Health, BlueCross BlueShield, local businesses, etc.)
+- Use strong action verbs (Managed, Coordinated, Processed, Implemented, Streamlined, etc.)
+- Quantify EVERYTHING with realistic numbers (patient records, daily calls, files processed, etc.)
+- Each bullet should be 1-2 sentences, professional but not robotic
+- Infer reasonable responsibilities from what she described — fill in the gaps intelligently
+- Make her sound like a STAR employee who any office would be lucky to have
+- NO generic placeholder text — every bullet should feel like a real person's real experience
+
+Return ONLY a JSON array of strings like:
+["bullet one", "bullet two", "bullet three", "bullet four", "bullet five"]
+
+No markdown, no explanations — ONLY the JSON array.`,
+    },
+  ];
+
+  const raw = await chat(messages, 0.85);
+  try {
+    const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    return Array.isArray(parsed) ? parsed : [raw];
+  } catch {
+    // Fallback — split by newlines and clean up
+    return raw
+      .split("\n")
+      .map((line) => line.replace(/^[\d•\-.\s]+/, "").trim())
+      .filter((line) => line.length > 15);
+  }
+}
+
 // ─── Generate Full Resume from Job Title ──────────────────
 export interface GeneratedResume {
   summary: string;
