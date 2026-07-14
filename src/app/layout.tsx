@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import LakenChat from "@/components/LakenChat";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
         <main className="flex-1 container mx-auto px-4 py-8 max-w-6xl">
           {children}
         </main>
+        <LakenChat />
         <Footer />
       </body>
     </html>

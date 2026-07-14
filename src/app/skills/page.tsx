@@ -12,6 +12,8 @@ import {
   Sprout,
   ArrowRight,
   Heart,
+  Wand2,
+  Zap,
 } from "lucide-react";
 
 export default function SkillsPage() {
@@ -22,9 +24,13 @@ export default function SkillsPage() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<SkillSuggestions | null>(null);
 
-  async function analyzeSkills(e: React.FormEvent) {
-    e.preventDefault();
-    if (!jobTitle.trim()) return;
+  async function analyzeSkills(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    runAnalysis(jobTitle, jobDescription, currentSkills);
+  }
+
+  async function runAnalysis(title: string, description: string, skills: string) {
+    if (!title.trim()) return;
 
     setLoading(true);
     setError("");
@@ -34,7 +40,7 @@ export default function SkillsPage() {
       const res = await fetch("/api/skills/suggest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobTitle, jobDescription, currentSkills }),
+        body: JSON.stringify({ jobTitle: title, jobDescription: description, currentSkills: skills }),
       });
 
       if (!res.ok) {
@@ -70,6 +76,43 @@ export default function SkillsPage() {
             <Target size={18} className="text-amber-500" />
             What job are you aiming for?
           </h3>
+
+          {/* ✨ Magic Wand Quick-Select Chips */}
+          <div className="mb-5 p-4 rounded-xl bg-gradient-to-r from-amber-50 via-purple-50 to-pink-50 border border-amber-100">
+            <p className="text-xs font-semibold text-amber-700 mb-3 flex items-center gap-1.5">
+              <Wand2 size={14} className="animate-magic-sparkle" />
+              QUICK BOOST — pick one & I&apos;ll analyze instantly!
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "Data Entry Clerk", icon: "⌨️", skills: "Typing 50+ WPM, Microsoft Excel, attention to detail, Google Sheets" },
+                { label: "Administrative Assistant", icon: "📋", skills: "Scheduling, email management, Microsoft Office, customer service" },
+                { label: "Office Assistant", icon: "🏢", skills: "Filing, data organization, phone etiquette, multitasking" },
+                { label: "Remote Data Entry", icon: "🏠", skills: "Self-motivated, remote tools, typing speed, independent worker" },
+                { label: "Receptionist", icon: "📞", skills: "Phone systems, greeting visitors, scheduling, multi-line phones" },
+                { label: "Customer Service", icon: "💬", skills: "Communication, problem-solving, patience, CRM software" },
+              ].map(({ label, icon, skills }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => {
+                    setJobTitle(label);
+                    setCurrentSkills(skills);
+                    runAnalysis(label, "", skills);
+                  }}
+                  className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl font-medium
+                             bg-white border-2 border-amber-200 text-amber-700
+                             hover:border-purple-300 hover:text-purple-700 hover:bg-purple-50
+                             hover:shadow-md hover:scale-105 transition-all duration-200
+                             group active:scale-95"
+                >
+                  <span className="text-base group-hover:animate-magic-sparkle">{icon}</span>
+                  {label}
+                  <Zap size={12} className="text-amber-400 group-hover:text-purple-500 transition-colors" />
+                </button>
+              ))}
+            </div>
+          </div>
 
           <form onSubmit={analyzeSkills} className="space-y-4">
             <div>
