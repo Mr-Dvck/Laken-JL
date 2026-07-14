@@ -57,6 +57,13 @@ export default function SkillsPage() {
     }
   }
 
+  async function handleMagicEnhance() {
+    if (!jobDescription.trim()) return;
+    // Use the job description as the title if no title is set
+    const title = jobTitle.trim() || "Data Entry";
+    await runAnalysis(title, jobDescription, currentSkills);
+  }
+
   return (
     <div className="py-4">
       {/* Header */}
@@ -129,18 +136,34 @@ export default function SkillsPage() {
               />
             </div>
 
+            {/* Job Description with Magic Wand */}
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
                 Paste the job description{" "}
                 <span className="text-gray-400 font-normal">(optional, but helps!)</span>
               </label>
-              <textarea
-                value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                placeholder="Paste the full job posting here for a better analysis..."
-                rows={5}
-                className="input-field resize-y"
-              />
+              <div className="flex gap-2">
+                <textarea
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                  placeholder="Paste the full job posting here for a better analysis..."
+                  rows={5}
+                  className="input-field resize-y flex-1 min-h-[140px]"
+                />
+                {/* Magic Wand Enhance Button */}
+                <button
+                  onClick={handleMagicEnhance}
+                  disabled={!jobDescription.trim() || loading}
+                  className="self-start mt-8 px-4 py-3 bg-gradient-to-br from-amber-400 to-yellow-500 
+                             text-white rounded-2xl hover:scale-110 active:scale-95 transition-all 
+                             shadow-lg shadow-amber-200/50 flex flex-col items-center justify-center gap-1 text-xs font-medium
+                             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  title="Magic Enhance with AI ✨"
+                >
+                  <Wand2 size={22} className={loading ? "animate-spin" : "animate-magic-sparkle"} />
+                  <span>{loading ? "Working..." : "Enhance"}</span>
+                </button>
+              </div>
             </div>
 
             <div>
